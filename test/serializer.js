@@ -284,6 +284,104 @@ describe('Options', function () {
       expect(json.data[1].meta.count).equal(1);
       done(null, json);
     });
+
+    it('should set the meta key to each included records (plain value)', function (done) {
+      var dataSet = [{
+        id: '54735750e16638ba1eee59cb',
+        firstName: 'Sandro',
+        lastName: 'Munda',
+        books: [{
+          id: '52735730e16632ba1eee62dd',
+          title: 'Tesla, SpaceX, and the Quest for a Fantastic Future',
+          isbn: '978-0062301239'
+        }, {
+          id: '52735780e16610ba1eee15cd',
+          title: 'Steve Jobs',
+          isbn: '978-1451648546'
+        }]
+      }, {
+        id: '5490143e69e49d0c8f9fc6bc',
+        firstName: 'Lawrence',
+        lastName: 'Bennett',
+        books: [{
+          id: '52735718e16610ba1eee15cd',
+          title: 'Zero to One: Notes on Startups, or How to Build the Future',
+          isbn: '978-0804139298'
+        }]
+      }];
+
+      var json = new JSONAPISerializer('users', {
+        attributes: ['firstName', 'lastName', 'books'],
+        books: {
+          ref: 'id',
+          attributes: ['title', 'isbn'],
+          dataMeta: {
+            copyright: 'publisher'
+          }
+        }
+      }).serialize(dataSet);
+
+      expect(json.included[0].meta.copyright).equal('publisher');
+      expect(json.included[1].meta.copyright).equal('publisher');
+      expect(json.included[2].meta.copyright).equal('publisher');
+      done(null, json);
+    });
+
+    it('should set the meta key to each included records (function)', function (done) {
+      var dataSet = [{
+        id: '54735750e16638ba1eee59cb',
+        firstName: 'Sandro',
+        lastName: 'Munda',
+        books: [{
+          id: '52735730e16632ba1eee62dd',
+          title: 'Tesla, SpaceX, and the Quest for a Fantastic Future',
+          isbn: '978-0062301239',
+          editions: [
+            { number: 1 },
+            { number: 2 }
+          ]
+        }, {
+          id: '52735780e16610ba1eee15cd',
+          title: 'Steve Jobs',
+          isbn: '978-1451648546',
+          editions: [
+            { number: 2000 },
+            { number: 2010 },
+            { number: 2017 }
+          ]
+        }]
+      }, {
+        id: '5490143e69e49d0c8f9fc6bc',
+        firstName: 'Lawrence',
+        lastName: 'Bennett',
+        books: [{
+          id: '52735718e16610ba1eee15cd',
+          title: 'Zero to One: Notes on Startups, or How to Build the Future',
+          isbn: '978-0804139298',
+          editions: [
+            { number: 1 }
+          ]
+        }]
+      }];
+
+      var json = new JSONAPISerializer('users', {
+        attributes: ['firstName', 'lastName', 'books'],
+        books: {
+          ref: 'id',
+          attributes: ['title', 'isbn'],
+          dataMeta: {
+            editionCount: function (record, current) {
+              return current.editions.length;
+            }
+          }
+        }
+      }).serialize(dataSet);
+
+      expect(json.included[0].meta.editionCount).equal(2);
+      expect(json.included[1].meta.editionCount).equal(3);
+      expect(json.included[2].meta.editionCount).equal(1);
+      done(null, json);
+    });
   });
 
   describe('included', function () {
