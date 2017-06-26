@@ -21,8 +21,8 @@ describe('Options', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        id: '_id',
-        attributes: ['firstName', 'lastName']
+        _id: '_id',
+        _attributes: ['firstName', 'lastName']
       }).serialize(dataSet);
 
       expect(json.data[0].id).equal('54735750e16638ba1eee59cb');
@@ -39,16 +39,16 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        pluralizeType: false
+        _attributes: ['firstName', 'lastName'],
+        _pluralizeType: false
       }).serialize(dataSet);
 
       expect(json.data.type).equal('user');
 
       // Confirm it response the same with a truthy setting
       json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        pluralizeType: true
+        _attributes: ['firstName', 'lastName'],
+        _pluralizeType: true
       }).serialize(dataSet);
 
       expect(json.data.type).equal('users');
@@ -65,8 +65,8 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        typeForAttribute: function (attribute) {
+        _attributes: ['firstName', 'lastName'],
+        _typeForAttribute: function (attribute) {
           return attribute + '_foo';
         }
       }).serialize(dataSet);
@@ -84,8 +84,8 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        typeForAttribute: function (attribute, user) {
+        _attributes: ['firstName', 'lastName'],
+        _typeForAttribute: function (attribute, user) {
           return user.customType;
         }
       }).serialize(dataSet);
@@ -108,18 +108,18 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName', 'bestFriend', 'job'],
-        typeForAttribute: function (attribute, data) {
+        _attributes: ['firstName', 'lastName', 'bestFriend', 'job'],
+        _typeForAttribute: function (attribute, data) {
           // sometimes this returns undefined
           return data.customType;
         },
         job: {
-          ref: 'id',
-          included: false
+          _ref: 'id',
+          _included: false
         },
         bestFriend: {
-          ref: 'id',
-          included: false
+          _ref: 'id',
+          _included: false
         }
       }).serialize(dataSet);
 
@@ -151,14 +151,14 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: function (user, address) {
+          _ref: function (user, address) {
             return address.id;
           },
-          attributes: ['street', 'zip']
+          _attributes: ['street', 'zip']
         },
-        typeForAttribute: function (attribute, record) {
+        _typeForAttribute: function (attribute, record) {
           return (record && record.type) ? record.type : attribute;
         }
       }).serialize(dataSet);
@@ -185,8 +185,8 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        meta: {
+        _attributes: ['firstName', 'lastName'],
+        _meta: {
           count: 1
         }
       }).serialize(dataSet);
@@ -203,8 +203,8 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        meta: {
+        _attributes: ['firstName', 'lastName'],
+        _meta: {
           count: function (record) {
             expect(record).to.be.eql({
               id: '1',
@@ -242,8 +242,8 @@ describe('Options', function () {
       }];
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        dataMeta: {
+        _attributes: ['firstName', 'lastName'],
+        _dataMeta: {
           copyright: 'publisher'
         }
       }).serialize(dataSet);
@@ -272,8 +272,8 @@ describe('Options', function () {
       }];
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName'],
-        dataMeta: {
+        _attributes: ['firstName', 'lastName'],
+        _dataMeta: {
           count: function (record, current) {
             return current.books.length;
           }
@@ -311,11 +311,11 @@ describe('Options', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'books'],
+        _attributes: ['firstName', 'lastName', 'books'],
         books: {
-          ref: 'id',
-          attributes: ['title', 'isbn'],
-          dataMeta: {
+          _ref: 'id',
+          _attributes: ['title', 'isbn'],
+          _dataMeta: {
             copyright: 'publisher'
           }
         }
@@ -365,11 +365,11 @@ describe('Options', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'books'],
+        _attributes: ['firstName', 'lastName', 'books'],
         books: {
-          ref: 'id',
-          attributes: ['title', 'isbn'],
-          dataMeta: {
+          _ref: 'id',
+          _attributes: ['title', 'isbn'],
+          _dataMeta: {
             editionCount: function (record, current) {
               return current.editions.length;
             }
@@ -409,11 +409,11 @@ describe('Options', function () {
       }];
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          included: false,
-          attributes: ['addressLine1', 'zipCode', 'country']
+          _ref: 'id',
+          _included: false,
+          _attributes: ['addressLine1', 'zipCode', 'country']
         }
       }).serialize(dataSet);
 
@@ -436,11 +436,11 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName', 'books', 'address'],
-        books: { attributes: ['createdAt'] },
-        address: { attributes: ['zipCode'] },
-        pluralizeType: false,
-        keyForAttribute: function (attribute) {
+        _attributes: ['firstName', 'lastName', 'books', 'address'],
+        books: { _attributes: ['createdAt'] },
+        address: { _attributes: ['zipCode'] },
+        _pluralizeType: false,
+        _keyForAttribute: function (attribute) {
           return Inflector.underscore(attribute);
         }
       }).serialize(dataSet);
@@ -468,10 +468,10 @@ describe('Options', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName', 'phoneNumber', 'address'],
-        address: { attributes: ['zipCode'] },
-        pluralizeType: false,
-        keyForAttribute: function (attribute) {
+        _attributes: ['firstName', 'lastName', 'phoneNumber', 'address'],
+        address: { _attributes: ['zipCode'] },
+        _pluralizeType: false,
+        _keyForAttribute: function (attribute) {
           return _.camelCase(attribute);
         }
       }).serialize(dataSet);
@@ -492,12 +492,12 @@ describe('Options', function () {
 
     it('should default the key case to dash-case', function (done) {
       var jsonNoCase = new JSONAPISerializer('user', dataSet, {
-        attributes: ['firstName'],
+        _attributes: ['firstName'],
       });
 
       var jsonInvalidCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'invalid case name'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'invalid case name'
       }).serialize(dataSet);
 
       expect(jsonNoCase.data.attributes['first-name']).equal('Sandro');
@@ -508,23 +508,23 @@ describe('Options', function () {
 
     it('should update the key case to dash-case', function (done) {
       var jsonDashCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'dash-case'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'dash-case'
       }).serialize(dataSet);
 
       var jsonLispCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'lisp-case'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'lisp-case'
       }).serialize(dataSet);
 
       var jsonSpinalCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'spinal-case'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'spinal-case'
       }).serialize(dataSet);
 
       var jsonKababCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'kebab-case'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'kebab-case'
       }).serialize(dataSet);
 
       expect(jsonDashCase.data.attributes['first-name']).equal('Sandro');
@@ -537,13 +537,13 @@ describe('Options', function () {
 
     it('should update the key case to underscore_case', function (done) {
       var jsonUnderscoreCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'underscore_case'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'underscore_case'
       }).serialize(dataSet);
 
       var jsonSnakeCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'snake_case'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'snake_case'
       }).serialize(dataSet);
 
       // jshint camelcase: false
@@ -561,8 +561,8 @@ describe('Options', function () {
       };
 
       var jsonCamelCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'CamelCase'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'CamelCase'
       }).serialize(dataSet);
 
       expect(jsonCamelCase.data.attributes.FirstName).equal('Sandro');
@@ -577,8 +577,8 @@ describe('Options', function () {
       };
 
       var jsonCamelCase = new JSONAPISerializer('user', {
-        attributes: ['firstName'],
-        keyForAttribute: 'camelCase'
+        _attributes: ['firstName'],
+        _keyForAttribute: 'camelCase'
       }).serialize(dataSet);
 
       expect(jsonCamelCase.data.attributes.firstName).equal('Sandro');
@@ -610,13 +610,13 @@ describe('Options', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        id: 'id',
-        attributes: ['firstName', 'lastName', 'address'],
+        _id: 'id',
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: function (collection, field) {
+          _ref: function (collection, field) {
             return collection.id + field.country + field.zipCode;
           },
-          attributes: ['addressLine1', 'country', 'zipCode']
+          _attributes: ['addressLine1', 'country', 'zipCode']
         }
       }).serialize(dataSet);
 
@@ -665,7 +665,7 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName'],
+        _attributes: ['firstName', 'lastName'],
       }).serialize(dataSet);
 
       expect(json).to.have.property('data').with.length(2);
@@ -695,7 +695,7 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName'],
+        _attributes: ['firstName', 'lastName'],
       }).serialize(resource);
 
       expect(json).to.have.property('data').and.to.be.instanceof(Object);
@@ -722,7 +722,7 @@ describe('JSON API Serializer', function () {
       var resource = null;
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName'],
+        _attributes: ['firstName', 'lastName'],
       }).serialize(resource);
 
       expect(json).to.have.property('data').and.to.equal(null);
@@ -754,9 +754,9 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          attributes: ['addressLine1', 'zipCode', 'country']
+          _attributes: ['addressLine1', 'zipCode', 'country']
         }
       }).serialize(dataSet);
 
@@ -775,9 +775,9 @@ describe('JSON API Serializer', function () {
       var dataSet = [{ id: 2 }, { id: 3 }];
 
       var json = new JSONAPISerializer('tags', {
-        ref: true,
-        included: false,
-        topLevelLinks: {
+        _ref: true,
+        _included: false,
+        _topLevelLinks: {
           self: '/articles/1/relationships/tags',
           related: '/articles/1/tags'
         }
@@ -803,7 +803,7 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
       }).serialize(dataSet);
 
       expect(json).eql({
@@ -854,9 +854,9 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'books'],
+        _attributes: ['firstName', 'lastName', 'books'],
         books: {
-          attributes: ['title', 'isbn']
+          _attributes: ['title', 'isbn']
         }
       }).serialize(dataSet);
 
@@ -883,10 +883,10 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          included: false
+          _ref: 'id',
+          _included: false
         }
       }).serialize(dataSet);
 
@@ -914,15 +914,15 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('users', {
-        id: '_id',
-        attributes: ['_id', 'firstName', 'lastName', 'foo'],
-        keyForAttribute: 'underscore_case',
+        _id: '_id',
+        _attributes: ['_id', 'firstName', 'lastName', 'foo'],
+        _keyForAttribute: 'underscore_case',
         foo: {
-          attributes: ['bar'],
+          _attributes: ['bar'],
           bar: {
-            attributes: ['firstName', 'lastName', 'barbar'],
+            _attributes: ['firstName', 'lastName', 'barbar'],
             barbar: {
-              attributes: ['firstName']
+              _attributes: ['firstName']
             }
           }
         }
@@ -974,10 +974,10 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          attributes: ['addressLine1', 'addressLine2', 'zipCode', 'country']
+          _ref: 'id',
+          _attributes: ['addressLine1', 'addressLine2', 'zipCode', 'country']
         }
       }).serialize(dataSet);
 
@@ -1038,10 +1038,10 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'books'],
+        _attributes: ['firstName', 'lastName', 'books'],
         books: {
-          ref: 'id',
-          attributes: ['title', 'isbn']
+          _ref: 'id',
+          _attributes: ['title', 'isbn']
         }
       }).serialize(dataSet);
 
@@ -1107,13 +1107,13 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'books'],
+        _attributes: ['firstName', 'lastName', 'books'],
         books: {
-          ref: 'id',
-          attributes: ['title', 'isbn', 'author'],
+          _ref: 'id',
+          _attributes: ['title', 'isbn', 'author'],
           author: {
-            ref: 'id',
-            attributes: ['firstName', 'lastName']
+            _ref: 'id',
+            _attributes: ['firstName', 'lastName']
           }
         }
       }).serialize(dataSet);
@@ -1194,13 +1194,13 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'books'],
+        _attributes: ['firstName', 'lastName', 'books'],
         books: {
-          ref: 'id',
-          attributes: ['title', 'isbn', 'authors'],
+          _ref: 'id',
+          _attributes: ['title', 'isbn', 'authors'],
           authors: {
-            ref: 'id',
-            attributes: ['firstName', 'lastName']
+            _ref: 'id',
+            _attributes: ['firstName', 'lastName']
           }
         }
       }).serialize(dataSet);
@@ -1265,13 +1265,13 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          attributes: ['addressLine1', 'zipCode', 'country', 'neighbours'],
+          _ref: 'id',
+          _attributes: ['addressLine1', 'zipCode', 'country', 'neighbours'],
           neighbours: {
-            ref: 'id',
-            attributes: ['firstName', 'lastName'],
+            _ref: 'id',
+            _attributes: ['firstName', 'lastName'],
           }
         }
       }).serialize(dataSet);
@@ -1310,10 +1310,10 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        attributes: ['firstName', 'lastName'],
+        _attributes: ['firstName', 'lastName'],
       }).serialize(dataSet);
 
       expect(json).to.have.property('links').eql({
@@ -1333,12 +1333,12 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: function(data){
             return 'http://localhost:3000/api/users/' + data.id;
           }
         },
-        attributes: ['firstName', 'lastName']
+        _attributes: ['firstName', 'lastName']
       }).serialize(dataSet);
 
       expect(json).to.have.property('links').eql({
@@ -1358,12 +1358,12 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: function (users) {
             return 'http://localhost:3000/api/users/' + users[0].firstName;
           }
         },
-        attributes: ['firstName', 'lastName'],
+        _attributes: ['firstName', 'lastName'],
       }).serialize(dataSet);
 
       expect(json).to.have.property('links').eql({
@@ -1387,13 +1387,13 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        dataLinks: {
+        _dataLinks: {
           self: 'http://localhost:3000/api/datalinks'
         },
-        attributes: ['firstName', 'lastName'],
+        _attributes: ['firstName', 'lastName'],
       }).serialize(dataSet);
 
       expect(json.data).to.include({
@@ -1427,15 +1427,15 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        dataLinks: {
+        _dataLinks: {
           self: function (dataSet, user) {
             return 'http://localhost:3000/api/datalinks/' + user.id;
           }
         },
-        attributes: ['firstName', 'lastName'],
+        _attributes: ['firstName', 'lastName'],
       }).serialize(dataSet);
 
       expect(json.data).to.include({
@@ -1483,17 +1483,17 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        attributes: ['firstName', 'lastName', 'addresses'],
+        _attributes: ['firstName', 'lastName', 'addresses'],
         addresses: {
-          ref: 'zipCode',
-          attributes: ['addressLine1', 'country'],
-          includedLinks: {
+          _ref: 'zipCode',
+          _attributes: ['addressLine1', 'country'],
+          _includedLinks: {
             self: 'http://localhost:4000/users/1/includedlinks'
           },
-          relationshipLinks: {
+          _relationshipLinks: {
             related: 'http://localhost:4000/users/1/addresses'
           }
         }
@@ -1534,19 +1534,19 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        attributes: ['firstName', 'lastName', 'addresses'],
+        _attributes: ['firstName', 'lastName', 'addresses'],
         addresses: {
-          ref: 'zipCode',
-          attributes: ['addressLine1', 'country'],
-          includedLinks: {
+          _ref: 'zipCode',
+          _attributes: ['addressLine1', 'country'],
+          _includedLinks: {
             self: function (record, current) {
               return 'http://localhost:4000/addresses/' + current.zipCode;
             }
           },
-          relationshipLinks: {
+          _relationshipLinks: {
             related: function (record, current, parent) {
               return 'http://localhost:4000/users/' + parent.id +
                 '/addresses/' + current[0].zipCode;
@@ -1590,14 +1590,14 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'zipCode',
-          attributes: ['addressLine1', 'country'],
-          includedLinks: {
+          _ref: 'zipCode',
+          _attributes: ['addressLine1', 'country'],
+          _includedLinks: {
             self: 'http://localhost:4000/users/1/relationships/addresses',
             related: 'http://localhost:4000/users/1/addresses'
           }
@@ -1637,14 +1637,14 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'zipCode',
-          attributes: ['addressLine1', 'country'],
-          includedLinks: {
+          _ref: 'zipCode',
+          _attributes: ['addressLine1', 'country'],
+          _includedLinks: {
             self: function (record, current) {
               return 'http://localhost:4000/addresses/' + current.zipCode;
             }
@@ -1684,17 +1684,17 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        attributes: ['firstName', 'lastName', 'addresses'],
+        _attributes: ['firstName', 'lastName', 'addresses'],
         addresses: {
-          ref: 'zipCode',
-          attributes: ['addressLine1', 'country'],
-          includedLinks: {
+          _ref: 'zipCode',
+          _attributes: ['addressLine1', 'country'],
+          _includedLinks: {
             self: 'http://localhost:4000/users/1/includedlinks'
           },
-          relationshipMeta: {
+          _relationshipMeta: {
             count: 1
           }
         }
@@ -1731,19 +1731,19 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        topLevelLinks: {
+        _topLevelLinks: {
           self: 'http://localhost:3000/api/users'
         },
-        attributes: ['firstName', 'lastName', 'addresses'],
+        _attributes: ['firstName', 'lastName', 'addresses'],
         addresses: {
-          ref: 'zipCode',
-          attributes: ['addressLine1', 'country'],
-          includedLinks: {
+          _ref: 'zipCode',
+          _attributes: ['addressLine1', 'country'],
+          _includedLinks: {
             self: function (record, current) {
               return 'http://localhost:4000/addresses/' + current.zipCode;
             }
           },
-          relationshipMeta: {
+          _relationshipMeta: {
             count: function (record) {
               return record.addresses.length;
             }
@@ -1784,10 +1784,10 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          attributes: ['addressLine1', 'zipCode', 'country']
+          _ref: 'id',
+          _attributes: ['addressLine1', 'zipCode', 'country']
         }
       }).serialize(dataSet);
 
@@ -1821,12 +1821,12 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          included: false,
-          ignoreRelationshipData: true,
-          relationshipLinks: {
+          _ref: 'id',
+          _included: false,
+          _ignoreRelationshipData: true,
+          _relationshipLinks: {
             related: '/foo/bar'
           }
         }
@@ -1858,11 +1858,11 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          included: false,
-          relationshipLinks: {
+          _ref: 'id',
+          _included: false,
+          _relationshipLinks: {
             related: '/foo/bar'
           }
         }
@@ -1892,10 +1892,10 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          attributes: ['addressLine1', 'zipCode', 'country']
+          _ref: 'id',
+          _attributes: ['addressLine1', 'zipCode', 'country']
         },
       }).serialize(dataSet);
 
@@ -1932,11 +1932,11 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          included: false,
-          relationshipLinks: {
+          _ref: 'id',
+          _included: false,
+          _relationshipLinks: {
             related: '/foo/bar'
           }
         }
@@ -1956,12 +1956,12 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          included: false,
-          ignoreRelationshipData: true,
-          relationshipLinks: {
+          _ref: 'id',
+          _included: false,
+          _ignoreRelationshipData: true,
+          _relationshipLinks: {
             related: '/foo/bar'
           }
         }
@@ -1980,9 +1980,9 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          nullIfMissing: true
+          _nullIfMissing: true
         }
       }).serialize(dataSet);
 
@@ -1999,12 +1999,12 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          included: false,
-          nullIfMissing: true,
-          relationshipLinks: {
+          _ref: 'id',
+          _included: false,
+          _nullIfMissing: true,
+          _relationshipLinks: {
             related: '/foo/bar'
           }
         }
@@ -2027,13 +2027,13 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: 'id',
-          attributes: ['country'],
+          _ref: 'id',
+          _attributes: ['country'],
           country: {
-            ref: 'id',
-            attributes: ['name']
+            _ref: 'id',
+            _attributes: ['name']
           }
         }
       }).serialize(dataSet);
@@ -2060,9 +2060,9 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['id', 'firstName', 'updated_at', 'address'],
+        _attributes: ['id', 'firstName', 'updated_at', 'address'],
         address: {
-          attributes: ['street']
+          _attributes: ['street']
         }
       }).serialize(dataSet);
 
@@ -2083,7 +2083,7 @@ describe('JSON API Serializer', function () {
       var user = new User({ firstName: 'Lawrence', lastName: 'Bennett' });
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName']
+        _attributes: ['firstName', 'lastName']
       }).serialize(user);
 
       expect(json.data.attributes).to.have.property('first-name');
@@ -2102,7 +2102,7 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('tester', {
-        attributes: ['count', 'bool', 'dbNull', 'emptyString']
+        _attributes: ['count', 'bool', 'dbNull', 'emptyString']
       }).serialize(dataSet);
 
       expect(json.data.attributes).to.have.property('count');
@@ -2128,12 +2128,12 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'meta:metum'],
+        _attributes: ['firstName', 'meta:metum'],
         metum: {
-          ref: 'id',
-          attributes: ['foo']
+          _ref: 'id',
+          _attributes: ['foo']
         },
-        meta: { count: 1 }
+        _meta: { count: 1 }
       }).serialize(dataSet);
 
       expect(json).to.be.eql({
@@ -2176,9 +2176,9 @@ describe('JSON API Serializer', function () {
        }];
 
        var json = new JSONAPISerializer('users', {
-         attributes: ['firstName', 'lastName', 'address'],
+         _attributes: ['firstName', 'lastName', 'address'],
          address: {
-           ref: true
+           _ref: true
          }
        }).serialize(dataSet);
 
@@ -2194,9 +2194,9 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: true
+          _ref: true
         }
       }).serialize(dataSet);
 
@@ -2215,9 +2215,9 @@ describe('JSON API Serializer', function () {
       }];
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: true
+          _ref: true
         }
       }).serialize(dataSet);
 
@@ -2236,9 +2236,9 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('users', {
-        attributes: ['firstName', 'lastName', 'address'],
+        _attributes: ['firstName', 'lastName', 'address'],
         address: {
-          ref: true
+          _ref: true
         }
       }).serialize(dataSet);
 
@@ -2261,14 +2261,14 @@ describe('JSON API Serializer', function () {
       };
 
       var json = new JSONAPISerializer('user', {
-        attributes: ['fullName', 'books', 'address'],
-        books: { attributes: ['createdAt'] },
-        address: { attributes: ['zipCode'] },
-        pluralizeType: false,
-        keyForAttribute: function (attribute) {
+        _attributes: ['fullName', 'books', 'address'],
+        books: { _attributes: ['createdAt'] },
+        address: { _attributes: ['zipCode'] },
+        _pluralizeType: false,
+        _keyForAttribute: function (attribute) {
           return Inflector.underscore(attribute);
         },
-        transform: function (record) {
+        _transform: function (record) {
           record.fullName = record.firstName + ' ' + record.lastName;
           return record;
         }

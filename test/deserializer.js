@@ -72,7 +72,7 @@ describe('JSON API Deserializer', function () {
       };
 
       new JSONAPIDeserializer({
-        keyForAttribute: 'camelCase'
+        _keyForAttribute: 'camelCase'
       }).deserialize(dataSet, function (err, json) {
         expect(json).to.be.eql({
           id: '54735750e16638ba1eee59cb',
@@ -119,7 +119,7 @@ describe('JSON API Deserializer', function () {
         }]
       };
 
-      new JSONAPIDeserializer({ keyForAttribute: 'camelCase' })
+      new JSONAPIDeserializer({ _keyForAttribute: 'camelCase' })
         .deserialize(dataSet, function (err, json) {
           expect(json).to.be.an('array').with.length(2);
 
@@ -262,7 +262,7 @@ describe('JSON API Deserializer', function () {
         }]
       };
 
-      new JSONAPIDeserializer({keyForAttribute: 'camelCase'})
+      new JSONAPIDeserializer({_keyForAttribute: 'camelCase'})
       .deserialize(dataSet, function (err, json) {
         expect(json).to.be.an('array').with.length(2);
 
@@ -898,7 +898,7 @@ describe('JSON API Deserializer', function () {
         }]
       };
 
-      new JSONAPIDeserializer({keyForAttribute: 'snake_case'})
+      new JSONAPIDeserializer({_keyForAttribute: 'snake_case'})
           .deserialize(dataSet).then(function (json) {
             expect(json).to.be.an('array').with.length(1);
             expect(json[0]).to.have.key('id', 'first_name', 'last_name', 'address');
@@ -992,7 +992,7 @@ describe('JSON API Deserializer', function () {
        };
 
        new JSONAPIDeserializer({
-         keyForAttribute: 'camelCase'
+         _keyForAttribute: 'camelCase'
        })
        .deserialize(dataSet, function (err, json) {
          expect(json).to.be.eql({
