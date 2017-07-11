@@ -93,6 +93,34 @@ describe('Options', function () {
       expect(json.data.type).equal('user_foo');
       done(null, json);
     });
+
+    it('should use typeForAttribute in the relationship if specified', function (done) {
+      var dataSet = {
+        id: '1',
+        firstName: 'Sandro',
+        lastName: 'Munda',
+        bestFriend: {
+          id: '2',
+          customType: 'people'
+        },
+      };
+
+      var json = new JSONAPISerializer('user', {
+        _attributes: ['firstName', 'lastName', 'bestFriend'],
+        bestFriend: {
+          _ref: 'id',
+          _included: false,
+          _typeForAttribute: function (attribute, data) {
+            return data.customType;
+          }
+        }
+      }).serialize(dataSet);
+
+      expect(json.data.type).equal('users');
+      expect(json.data.relationships['best-friend'].data.type).equal('people');
+      done(null, json);
+    });
+
     it('should use the default behaviour when typeForAttribute returns undefined', function (done) {
       var dataSet = {
         id: '1',
@@ -119,7 +147,10 @@ describe('Options', function () {
         },
         bestFriend: {
           _ref: 'id',
-          _included: false
+          _included: false,
+          _typeForAttribute: function (attribute, data) {
+            return data.customType;
+          }
         }
       }).serialize(dataSet);
 
@@ -156,10 +187,13 @@ describe('Options', function () {
           _ref: function (user, address) {
             return address.id;
           },
-          _attributes: ['street', 'zip']
+          _attributes: ['street', 'zip'],
+          _typeForAttribute: function (attribute, record) {
+            return (record && record.type) ? record.type : attribute;
+          }
         },
         _typeForAttribute: function (attribute, record) {
-          return (record && record.type) ? record.type : attribute;
+          return attribute;
         }
       }).serialize(dataSet);
 
